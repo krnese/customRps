@@ -1,0 +1,78 @@
+{
+    "$schema": "https://schema.management.azure.com/schemas/2018-05-01/subscriptionDeploymentTemplate.json#",
+    "contentVersion": "1.0.0.0",
+    "parameters": {
+        "rgName": {
+            "type": "string"
+        },
+        "rgLocation": {
+            "type": "string"
+        },
+        "functionAppName": {
+            "type": "string"
+        },
+        "msiScop": {
+            "type": "string",
+            "defaultValue": "subscription",
+            "allowedValues": [
+                "subscription",
+                "resourceGroup"
+            ]
+        }
+    },
+    "variables": {
+        "functionTemplate": "[uri(deployment().properties.templateLink.uri, 'psFunction2.json')]",
+        "msiSubTemplate": "[uri(deployment().properties.templateLink.uri, 'msiSubTemplate.json')]",
+        "msiRgTemplate": "[uri(deployment().properties.templateLink.uri, 'msiRgTemplate.json')]"
+    },
+    "resources": [
+        {
+            "type": "Microsoft.Resources/resourceGroups",
+            "apiVersion": "2018-05-01",
+            "name": "[parameters('rgName')]",
+            "location": "[parameters('rgLocation')]",
+            "properties":{}
+        },
+        {
+            "type": "Microsoft.Resources/deployments",
+            "apiVersion": "2018-05-01",
+            "resourceGroup": "[parameters('rgName')]",
+            "name": "psFunction",
+            "dependsOn": [
+                "[resourceId('Microsoft.Resources/resourceGroups/', parameters('rgName')]"
+            ],
+            "properties":{
+                "mode":"Incremental",
+                "templateLink":{
+                    "contentVersion": "1.0.0.0",
+                    "uri": "[variables('functionTemplate')]"
+                },
+                "parameters":{
+                    "functionAppName": {
+                        "value": "[parameters('functionAppName')]"
+                    }
+                }
+            }
+        },
+        {
+            "type": "Microsoft.Resources/deployments",
+            "apiVersion": "2018-05-01",
+            "name": "msiSub",
+            "dependsOn": [
+                "[concat('Microsoft.Resources/deployments/', 'psFunction')]"
+            ],
+            "properties":{
+                "mode":"Incremental",
+                "templateLink":{
+                    "contentVersion": "1.0.0.0",
+                    "uri": "[variables('msiSubTemplate')]"
+                },
+                "parameters":{
+                    "functionPrincipalId": {
+                        "value": "[reference('psFunction').outputs.functionPrincipalId.value]"
+                    }
+                }
+            }
+        }
+    ]
+}
