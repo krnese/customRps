@@ -1,0 +1,47 @@
+{
+    "$schema": "https://schema.management.azure.com/schemas/2015-01-01/deploymentTemplate.json#",
+    "contentVersion": "1.0.0.0",
+    "parameters": {},
+    "variables": {},
+    "resources": [
+        {
+            "type": "Microsoft.CustomProviders/resourceProviders",
+            "name": "random",
+            "apiVersion": "2018-09-01-preview",
+            "location": "eastus",
+            "properties": {
+                "resourceTypes": [
+                    {
+                        "name": "foobar",
+                        "endpoints": [
+                            {
+                                "enabled": true,
+                                "apiVersion": "2018-09-01-preview",
+                                "endpointUri": "https://knrp.azurewebsites.net/api/",
+                                "timeout": "PT1M"
+                            }
+                        ]
+                    }
+                ]
+            },
+            "resources": [
+                {
+                    "type": "foobar",
+                    "name": "myResource",
+                    "apiVersion": "2018-09-01-preview",
+                    "location": "eastus",
+                    "properties": {
+                        "name": "kristian",
+                        "age": "33",
+                        "company": "Microsoft"
+                    },
+                    "dependsOn": [
+                        "Microsoft.CustomProviders/resourceProviders/random"
+                    ]
+                }
+            ]
+        }
+        
+    ],
+    "outputs": {}
+}
