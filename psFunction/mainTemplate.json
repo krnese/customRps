@@ -11,7 +11,7 @@
         "functionAppName": {
             "type": "string"
         },
-        "msiScop": {
+        "msiScope": {
             "type": "string",
             "defaultValue": "subscription",
             "allowedValues": [
@@ -55,6 +55,7 @@
             }
         },
         {
+            "condition": "[equals(parameters('msiScope'), 'subscription')]",
             "type": "Microsoft.Resources/deployments",
             "apiVersion": "2018-05-01",
             "name": "msiSub",
@@ -66,6 +67,28 @@
                 "templateLink":{
                     "contentVersion": "1.0.0.0",
                     "uri": "[variables('msiSubTemplate')]"
+                },
+                "parameters":{
+                    "functionPrincipalId": {
+                        "value": "[reference('psFunction').outputs.functionPrincipalId.value]"
+                    }
+                }
+            }
+        },
+        {
+            "condition": "[equals(parameters('msiScope'), 'resourceGroup')]",
+            "type": "Microsoft.Resources/deployments",
+            "apiVersion": "2018-05-01",
+            "name": "msiRg",
+            "resourceGroup": "[parameters('rgName')]",
+            "dependsOn": [
+                "[concat('Microsoft.Resources/deployments/', 'psFunction')]"
+            ],
+            "properties":{
+                "mode":"Incremental",
+                "templateLink":{
+                    "contentVersion": "1.0.0.0",
+                    "uri": "[variables('msiRgTemplate')]"
                 },
                 "parameters":{
                     "functionPrincipalId": {
