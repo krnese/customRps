@@ -5,7 +5,7 @@
         "rgName": {
             "type": "string"
         },
-        "rgLocation": {
+        "location": {
             "type": "string"
         },
         "functionAppName": {
@@ -30,7 +30,7 @@
             "type": "Microsoft.Resources/resourceGroups",
             "apiVersion": "2018-05-01",
             "name": "[parameters('rgName')]",
-            "location": "[parameters('rgLocation')]",
+            "location": "[parameters('location')]",
             "properties":{}
         },
         {
@@ -57,6 +57,7 @@
         {
             "condition": "[equals(parameters('msiScope'), 'subscription')]",
             "type": "Microsoft.Resources/deployments",
+            "location": "[parameters('location')]",
             "apiVersion": "2018-05-01",
             "name": "msiSub",
             "dependsOn": [
