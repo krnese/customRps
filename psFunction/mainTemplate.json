@@ -59,7 +59,7 @@
             "type": "Microsoft.Resources/deployments",
             "location": "[parameters('location')]",
             "apiVersion": "2018-05-01",
-            "name": "msiSub",
+            "name": "[guid('msiSub')]",
             "dependsOn": [
                 "[concat('Microsoft.Resources/deployments/', 'psFunction')]"
             ],
