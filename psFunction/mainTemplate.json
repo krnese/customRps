@@ -98,5 +98,19 @@
                 }
             }
         }
-    ]
+    ],
+    "outputs": {
+        "msiAssignedScope": {
+            "type": "string",
+            "value": "[if(equals(parameters('msiScope'), 'subscription'), 'Assigned at subscription', 'Assigned at resource group')]"
+        },
+        "functionPrincipalId": {
+            "type": "string",
+            "value": "[reference('psFunction').outputs.functionPrincipalId.value]"
+        },
+        "functionResourceGroup": {
+            "type": "string",
+            "value": "[parameters('rgName')]"
+        }
+    }
 }
