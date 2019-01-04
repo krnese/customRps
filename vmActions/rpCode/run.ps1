@@ -1,17 +1,27 @@
+<#
+.SYNOPSIS 
+    This sample RP based on PS requires the following Az PowerShell Core modules present in your function:
+    - Az.Resources
+    - Az.Accounts
+    - Az.Compute
+    
+.PARAMETER Request
+    The request body in json format that is sent into the function.
+.PARAMETER TriggerMetadata
+    Required. Information about what triggered the function.
+#>
 using namespace System.Net
 
 # Input bindings are passed in via param block.
 param($Request, $TriggerMetadata)
 $ErrorActionPreference = 'stop'
 
-try {
-
 # Authenticating to ARM using MSI and preparing RPC valid reponse
 
     Write-Information "CustomRp will trigger a request"
 
     # Write to the Azure Functions log stream.
-    Write-Information ("Starting function CustomRps...") 
+    Write-Information ("Starting function vmAction...") 
 
     if ($null -ne $Env:MSI_ENDPOINT)
     {
@@ -57,7 +67,7 @@ try {
     $name = [RPC]::GetResourceName($uri) | ConvertTo-Json
     $type = [RPC]::GetProviderPath($uri) | ConvertTo-Json
     
-$jsonResponseBody = @"
+$jsonSuccessResponseBody = @"
 {
     "id": $($id),
     "type": $($type),
@@ -65,7 +75,15 @@ $jsonResponseBody = @"
         "properties": $($resourceProperties)
 }
 "@
-Write-Information $jsonResponsebody
+
+$jsonErrorResponseBody = @"
+{
+    "id": $($id),
+    "type": $($type),
+    "name": $($name),
+        "properties": $($badRequestStatusCode)
+}
+"@
 
     # RP Logic
     if ([string]::IsNullOrEmpty($request.body.properties) -or [string]::IsNullOrEmpty($request.body.properties.vmResourceId))
@@ -74,15 +92,14 @@ Write-Information $jsonResponsebody
         Write-Information ("Error parsing request body")
         Push-OutputBinding -Name Response -Value ([HttpResponseContext]@{
             StatusCode = $badRequestStatusCode
-            Body = $jsonResponseBody
+            Body = $jsonErrorResponseBody
             ContentType = $ContentType
         })
     }
     else
     {
         Write-Information ("Preparing to stop/start the following VM: `n $($request.body.properties.vmResourceId)")
-
-        Try {
+        
             $VMToStop = Get-AzResource -ResourceId $Request.body.properties.vmResourceId
             $VmRg = $VMToStop.ResourceGroupName
             $VmName = $VmToStop.Name
@@ -91,35 +108,7 @@ Write-Information $jsonResponsebody
             Write-Information ("VM $($VmName) has now stopped")
             Push-OutputBinding -Name Response -Value ([HttpResponseContext]@{
                 StatusCode = $okStatusCode
-                Body = $jsonResponseBody
+                Body = $jsonSuccessResponseBody
                 ContentType = $ContentType
             })
-        }
-        Catch {
-            Write-Host "Bad request..."
-            Write-Information ("Unable to stop VM")
-            Push-OutputBinding -Name Response -Value ([HttpResponseContext]@{
-                StatusCode = $badRequestStatusCode
-                Body = $jsonResponseBody
-                ContentType = $ContentType
-            })
-        }
     }
-
-# Associate values to output bindings by calling 'Push-OutputBinding'.
-Push-OutputBinding -Name Response -Value ([HttpResponseContext]@{
-    StatusCode = $okStatusCode
-    Body = $jsonResponseBody
-    ContentType = $ContentType
-})
-}
-Catch
-{
-    Write-Information ("Failed beyond recognition")
-    {
-    Push-OutputBinding -Name Response -Value ([HttpResponseContext]@{
-        StatusCode = "500"
-        Body = $_.Exception.Message
-    })
-}
-}
