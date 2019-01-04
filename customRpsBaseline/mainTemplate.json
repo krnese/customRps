@@ -59,7 +59,7 @@
             "type": "Microsoft.Resources/deployments",
             "location": "[parameters('location')]",
             "apiVersion": "2018-05-01",
-            "name": "[guid('msiSub')]",
+            "name": "[concat(uniquestring(deployment().name))]",
             "dependsOn": [
                 "[concat('Microsoft.Resources/deployments/', 'psFunction')]"
             ],
@@ -80,7 +80,7 @@
             "condition": "[equals(parameters('msiScope'), 'resourceGroup')]",
             "type": "Microsoft.Resources/deployments",
             "apiVersion": "2018-05-01",
-            "name": "[concat(uniquestring(deployment().name))]",
+            "name": "msiRg",
             "resourceGroup": "[parameters('rgName')]",
             "dependsOn": [
                 "[concat('Microsoft.Resources/deployments/', 'psFunction')]"
