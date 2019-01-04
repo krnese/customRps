@@ -7,6 +7,7 @@ The **mainTemplate.json** will deploy the following:
 - Application Insights instance
 - App Function - using PowerShell Core
 - App Function Web plan
+- MSI assigned at resource group - or subscription scope
 
 ## Deployment
 
