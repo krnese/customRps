@@ -1,0 +1,42 @@
+{
+    "$schema": "https://schema.management.azure.com/schemas/2015-01-01/deploymentTemplate.json#",
+    "contentVersion": "1.0.0.0",
+    "parameters": {},
+    "resources": [
+        {
+            "type": "Microsoft.CustomProviders/resourceProviders",
+            "name": "krnese",
+            "apiVersion": "2018-09-01-preview",
+            "location": "eastus",
+            "properties": {
+                "resourceTypes": [
+                    {
+                        "name": "customRps",
+                        "endpoints": [
+                            {
+                                "enabled": true,
+                                "apiVersion": "2018-09-01-preview",
+                                "endpointUri": "https://customrps.azurewebsites.net/api/",
+                                "timeout": "PT1M"
+                            }
+                        ]
+                    }
+                ]
+            }
+        },
+        {
+            "type": "Microsoft.CustomProviders/resourceProviders/customRps",
+            "name": "krnese/myResource",
+            "apiVersion": "2018-09-01-preview",
+            "location": "eastus",
+            "properties": {
+                "sampleProperty1": "foo",
+                "sampleProperty2": "bar"
+            },
+            "dependsOn": [
+                "Microsoft.CustomProviders/resourceProviders/krnese"
+            ]
+        }
+    ],
+    "outputs": {}
+}

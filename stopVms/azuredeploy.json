@@ -1,0 +1,52 @@
+{
+    "$schema": "https://schema.management.azure.com/schemas/2015-01-01/deploymentTemplate.json#",
+    "contentVersion": "1.0.0.0",
+    "parameters": {
+        "vmName": {
+            "type": "string",
+            "defaultValue": "jumphost"
+        }
+    },
+    "variables": {},
+    "resources": [
+        {
+            "type": "Microsoft.CustomProviders/resourceProviders",
+            "name": "vmActions",
+            "apiVersion": "2018-09-01-preview",
+            "location": "eastus",
+            "properties": {
+                "resourceTypes": [
+                    {
+                        "name": "stopVms",
+                        "endpoints": [
+                            {
+                                "enabled": true,
+                                "apiVersion": "2018-09-01-preview",
+                                "endpointUri": "https://kngrands.azurewebsites.net/api/",
+                                "timeout": "PT1M"
+                            }
+                        ]
+                    }
+                ]
+            }
+        },
+        {
+            "type": "Microsoft.CustomProviders/resourceProviders/stopVms",
+            "name": "vmActions/myResource",
+            "apiVersion": "2018-09-01-preview",
+            "location": "eastus",
+            "properties": {
+                "vmResourceId": "[resourceId('Microsoft.Compute/virtualMachines/', parameters('vmName'))]"
+            },
+            "dependsOn": [
+                "Microsoft.CustomProviders/resourceProviders/vmActions"
+            ]
+        }
+    ],
+    "outputs": {
+        "customRpOutput": {
+            "type": "string",
+            "value": "[reference(resourceId('Microsoft.CustomProviders/resourceProviders/stopVms', 'vmActions', 'myResource')).vmResourceId]"
+        }
+    }
+}

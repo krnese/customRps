@@ -80,7 +80,7 @@
             "condition": "[equals(parameters('msiScope'), 'resourceGroup')]",
             "type": "Microsoft.Resources/deployments",
             "apiVersion": "2018-05-01",
-            "name": "msiRg",
+            "name": "[concat(uniquestring(deployment().name))]",
             "resourceGroup": "[parameters('rgName')]",
             "dependsOn": [
                 "[concat('Microsoft.Resources/deployments/', 'psFunction')]"
