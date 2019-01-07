@@ -6,4 +6,4 @@
 
 Learn the basics of an ARM template, and work with some of the most frequently used functions
 
-* [**Explore ARM exapmles for deploying custom RPs and resource types**](./ArmExamples)
+* [**Explore ARM examples for deploying custom RPs and resource types**](./ArmExamples)
