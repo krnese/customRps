@@ -15,11 +15,11 @@ Since this is a subscription level deployment, you must deploy using either CLI 
 
 PowerShell:
 
-````powershell
+```powershell
 New-AzureRmDeployment -Name myRp -Location <location> -TemplateUri "https://raw.githubusercontent.com/krnese/customRps/master/CustomRp-Prototypes/AzureFunctionApp/mainTemplate.json"
-````
+```
 
 CLI
-````cli
+```cli
 az deployment create -n myRp -l <location> --template-uri "https://raw.githubusercontent.com/krnese/customRps/master/CustomRp-Prototypes/AzureFunctionApp/mainTemplate.json"
-````
+```
