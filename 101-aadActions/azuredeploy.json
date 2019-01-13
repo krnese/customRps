@@ -1,0 +1,69 @@
+{
+    "$schema": "https://schema.management.azure.com/schemas/2015-01-01/deploymentTemplate.json#",
+    "contentVersion": "1.0.0.0",
+    "parameters": {
+        "displayName": {
+            "type": "string",
+            "defaultValue": "custom"
+        },
+        "userPrincipalName": {
+            "type": "string",
+            "defaultValue": "custom@azuredcx.onmicrosoft.com"
+        },
+        "mailNickName": {
+            "type": "string",
+            "defaultValue": "custom"
+        },
+        "password": {
+            "type": "securestring"
+        }
+    },
+    "resources": [
+        {
+            "apiVersion": "2018-09-01-preview",
+            "type": "Microsoft.CustomProviders/resourceProviders",
+            "name": "aadActions",
+            "location": "eastus",
+            "properties": {
+                "resourceTypes": [
+                    {
+                        "name": "aadUsers",
+                        "endpoints": [
+                            {
+                                "enabled": true,
+                                "apiVersion": "2018-09-01-preview",
+                                "endpointUri": "https://m2-aad-powershell.azurewebsites.net/api/",
+                                "timeout": "PT1M"
+                            }
+                        ]
+                    }
+                ]
+            }
+        },
+        {
+            "apiVersion": "2018-09-01-preview",
+            "type": "Microsoft.CustomProviders/resourceProviders/aadUsers",
+            "name": "aadActions/newUser",
+            "location": "eastus",
+            "dependsOn": [
+                "[resourceId('Microsoft.CustomProviders/resourceProviders/', 'aadActions')]"
+            ],
+            "properties":{
+                    "displayName": "[parameters('displayName')]",
+                    "userPrincipalName": "[parameters('userPrincipalName')]",
+                    "mailNickName": "[parameters('mailNickName')]",
+                    "password": "[parameters('password')]"
+            }
+        },
+        {
+            "apiVersion": "2017-09-01",
+            "type": "Microsoft.Authorization/roleAssignments",
+            "name": "newUserAssignment",
+            "properties": {
+                "principalId": "[reference(resourceId('Microsoft.CustomProviders/resourceProviders/aadActions', 'aadUsers', 'newUser')).principalId]",
+                "roleDefinitionId": "[resourceId('Microsoft.Authorization/roleDefinitions/', 'b24988ac-6180-42a0-ab88-20f7382dd24c')]"
+            }
+        }
+    ],
+    "outputs": {}
+}
