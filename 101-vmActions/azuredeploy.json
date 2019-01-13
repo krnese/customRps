@@ -35,12 +35,12 @@
             "name": "vmActions/myResource",
             "apiVersion": "2018-09-01-preview",
             "location": "eastus",
+            "dependsOn": [
+                "[resourceId('Microsoft.CustomProviders/resourceProviders/', 'vmActions')]"
+            ],
             "properties": {
                 "vmResourceId": "[resourceId('Microsoft.Compute/virtualMachines/', parameters('vmName'))]"
-            },
-            "dependsOn": [
-                "Microsoft.CustomProviders/resourceProviders/vmActions"
-            ]
+            }
         }
     ],
     "outputs": {
