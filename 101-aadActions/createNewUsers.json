@@ -1,0 +1,117 @@
+{
+    "$schema": "https://schema.management.azure.com/schemas/2015-01-01/deploymentTemplate.json#",
+    "contentVersion": "1.0.0.0",
+    "parameters": {
+        "displayName": {
+            "type": "string",
+            "defaultValue": "custom"
+        },
+        "userPrincipalName": {
+            "type": "string",
+            "defaultValue": "custom@azuredcx.onmicrosoft.com"
+        },
+        "mailNickName": {
+            "type": "string",
+            "defaultValue": "custom"
+        },
+        "password": {
+            "type": "securestring"
+        },
+        "groupDisplayName": {
+            "type": "string"
+        },
+        "groupMailNickName": {
+            "type": "string"
+        }
+    },
+    "resources": [
+        {
+            "apiVersion": "2018-09-01-preview",
+            "type": "Microsoft.CustomProviders/resourceProviders",
+            "name": "aadActions",
+            "location": "eastus",
+            "properties": {
+                "resourceTypes": [
+                    {
+                        "name": "aadUsers",
+                        "endpoints": [
+                            {
+                                "enabled": true,
+                                "apiVersion": "2018-09-01-preview",
+                                "endpointUri": "https://aadActions.azurewebsites.net/api/",
+                                "timeout": "PT1M"
+                            }
+                        ]
+                    },
+                    {
+                        "name": "aadGroups",
+                        "endpoints": [
+                            {
+                                "enabled": true,
+                                "apiVersion": "2018-09-01-preview",
+                                "endpointUri": "https://aadActions.azurewebsites.net/api/",
+                                "timeout": "PT1M"
+                            }
+                        ]
+                    },
+                    {
+                        "name": "aadAddGroupMembers",
+                        "endpoints": [
+                            {
+                                "enabled": true,
+                                "apiVersion": "2018-09-01-preview",
+                                "endpointUri": "https://aadActions.azurewebsites.net/api/",
+                                "timeout": "PT1M"
+                            }
+                        ]
+                    }
+                ]
+            }
+        },
+        {
+            "apiVersion": "2018-09-01-preview",
+            "type": "Microsoft.CustomProviders/resourceProviders/aadUsers",
+            "name": "aadActions/newUser",
+            "location": "eastus",
+            "dependsOn": [
+                "[resourceId('Microsoft.CustomProviders/resourceProviders/', 'aadActions')]"
+            ],
+            "properties": {
+                "displayName": "[parameters('displayName')]",
+                "userPrincipalName": "[parameters('userPrincipalName')]",
+                "mailNickName": "[parameters('mailNickName')]",
+                "password": "[parameters('password')]"
+            }
+        },
+        {
+            "apiVersion": "2018-09-01-preview",
+            "type": "Microsoft.CustomProviders/resourceProviders/aadGroups",
+            "name": "aadActions/newGroup",
+            "location": "eastus",
+            "dependsOn": [
+                "[resourceId('Microsoft.CustomProviders/resourceProviders/', 'aadActions')]"
+            ],
+            "properties": {
+                "displayName": "[parameters('groupDisplayName')]",
+                "mailNickName": "[parameters('groupMailNickName')]"
+            }
+        },
+        {
+            "apiVersion": "2018-09-01-preview",
+            "type": "Microsoft.CustomProviders/resourceProviders/aadAddGroupMembers",
+            "name": "aadActions/newMember",
+            "location": "eastus",
+            "dependsOn": [],
+            "properties": {
+                "userPrincipalName": "[parameters('userPrincipalName')]",
+                "groupId": "[reference(resourceId('Microsoft.CustomProviders/resourceProviders/aadGroups', 'aadActions', 'newGroup')).id]"
+            }
+        }
+    ],
+    "outputs": {
+        "userId": {
+            "type": "string",
+            "value": "[reference(resourceId('Microsoft.CustomProviders/resourceProviders/aadUsers', 'aadActions', 'newUser')).id]"
+        }
+    }
+}
