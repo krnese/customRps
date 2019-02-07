@@ -4,6 +4,4 @@
 
 * [**Explore RP backend prototypes**](./CustomRp-Prototypes)
 
-Learn the basics of an ARM template, and work with some of the most frequently used functions
-
 * [**Understand ARM resource modeling when designing custom RPs and resource types**](./ArmExamples)
