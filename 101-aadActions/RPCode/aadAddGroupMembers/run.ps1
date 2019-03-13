@@ -27,7 +27,7 @@ $ErrorActionPreference = 'stop'
 
 
 $username = "b2ceb57c-0f34-4f80-8a29-a43d20947bec" 
-$password = Convertto-SecureString "abab12UNIUNI" -AsPlainText -Force
+$password = Convertto-SecureString "foo" -AsPlainText -Force
 $credential = New-Object System.Management.Automation.PSCredential($username,$password)
 $tenant = "d6ad82f3-42af-4a15-ac1e-49e6c08f624e"
 $subscription = "0a938bc2-0bb8-4688-bd37-9964427fe0b0"
