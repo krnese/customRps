@@ -34,36 +34,18 @@
                 "resourceTypes": [
                     {
                         "name": "aadUsers",
-                        "endpoints": [
-                            {
-                                "enabled": true,
-                                "apiVersion": "2018-09-01-preview",
-                                "endpointUri": "https://aadActions.azurewebsites.net/api/",
-                                "timeout": "PT1M"
-                            }
-                        ]
+                        "routingType": "proxy",
+                        "endpoint": "https://aadActions.azurewebsites.net/api/"
                     },
                     {
                         "name": "aadGroups",
-                        "endpoints": [
-                            {
-                                "enabled": true,
-                                "apiVersion": "2018-09-01-preview",
-                                "endpointUri": "https://aadActions.azurewebsites.net/api/",
-                                "timeout": "PT1M"
-                            }
-                        ]
+                        "routingType": "proxy",
+                        "endpoint": "https://aadActions.azurewebsites.net/api/"
                     },
                     {
                         "name": "aadAddGroupMembers",
-                        "endpoints": [
-                            {
-                                "enabled": true,
-                                "apiVersion": "2018-09-01-preview",
-                                "endpointUri": "https://aadActions.azurewebsites.net/api/",
-                                "timeout": "PT1M"
-                            }
-                        ]
+                        "routingType": "proxy",
+                        "endpoint": "https://aadActions.azurewebsites.net/api/"
                     }
                 ]
             }

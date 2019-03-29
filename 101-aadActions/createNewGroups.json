@@ -21,14 +21,8 @@
                 "resourceTypes": [
                     {
                         "name": "aadGroups",
-                        "endpoints": [
-                            {
-                                "enabled": true,
-                                "apiVersion": "2018-09-01-preview",
-                                "endpointUri": "https://aadActions.azurewebsites.net/api/",
-                                "timeout": "PT1M"
-                            }
-                        ]
+                        "routingType": "proxy",
+                        "endpoint": "https://aadActions.azurewebsites.net/api/"
                     }
                 ]
             }
@@ -41,9 +35,9 @@
             "dependsOn": [
                 "[resourceId('Microsoft.CustomProviders/resourceProviders/', 'aadActions')]"
             ],
-            "properties":{
-                    "displayName": "[parameters('displayName')]",
-                    "mailNickName": "[parameters('mailNickName')]"
+            "properties": {
+                "displayName": "[parameters('displayName')]",
+                "mailNickName": "[parameters('mailNickName')]"
             }
         }
     ],

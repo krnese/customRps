@@ -28,14 +28,8 @@
                 "resourceTypes": [
                     {
                         "name": "aadUsers",
-                        "endpoints": [
-                            {
-                                "enabled": true,
-                                "apiVersion": "2018-09-01-preview",
-                                "endpointUri": "https://m2-aad-powershell.azurewebsites.net/api/",
-                                "timeout": "PT1M"
-                            }
-                        ]
+                        "routingType": "proxy",
+                        "endpoint": "https://aadActions.azurewebsites.net/api/"
                     }
                 ]
             }
