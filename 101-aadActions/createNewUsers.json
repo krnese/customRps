@@ -35,17 +35,17 @@
                     {
                         "name": "aadUsers",
                         "routingType": "proxy",
-                        "endpoint": "https://aadActions.azurewebsites.net/api/"
+                        "endpoint": "https://aadActions.azurewebsites.net/api/{RequestPath}"
                     },
                     {
                         "name": "aadGroups",
                         "routingType": "proxy",
-                        "endpoint": "https://aadActions.azurewebsites.net/api/"
+                        "endpoint": "https://aadActions.azurewebsites.net/api/{RequestPath}"
                     },
                     {
                         "name": "aadAddGroupMembers",
                         "routingType": "proxy",
-                        "endpoint": "https://aadActions.azurewebsites.net/api/"
+                        "endpoint": "https://aadActions.azurewebsites.net/api/{RequestPath}"
                     }
                 ]
             }

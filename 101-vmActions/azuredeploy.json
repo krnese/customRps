@@ -19,7 +19,7 @@
                     {
                         "name": "stopVms",
                         "routingType": "proxy",
-                        "endpoint": "https://vmactions.azurewebsites.net/api/"
+                        "endpoint": "https://vmactions.azurewebsites.net/api/{RequestPath}"
                     }
                 ]
             }

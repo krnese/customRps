@@ -22,7 +22,7 @@
                     {
                         "name": "aadGroups",
                         "routingType": "proxy",
-                        "endpoint": "https://aadActions.azurewebsites.net/api/"
+                        "endpoint": "https://aadActions.azurewebsites.net/api/{RequestPath}"
                     }
                 ]
             }
